@@ -440,7 +440,7 @@ public class CensusService {
 		if (fecha_inicio_long < fecha_actual_long && fecha_fin_long > fecha_actual_long) {
 			res = true;
 		}
-
+		
 		return res;
 	}
 
