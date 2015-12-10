@@ -198,7 +198,7 @@ public class CensusController extends AbstractController {
 	// @CookieValue("user") String username, @RequestParam String
 	// username_remove) {
 	public ModelAndView removeUser(@RequestParam int censusId, String username, @RequestParam String username_remove) {
-		username = "test1";
+		username = "admin1";
 		ModelAndView result = null;
 		try {
 
