@@ -14,23 +14,21 @@ package controllers;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Census;
 import services.CensusService;
 import utilities.RESTClient;
-import domain.Census;
 
 @Controller
 @RequestMapping("/census")
@@ -173,14 +171,14 @@ public class CensusController extends AbstractController {
 	// ----------------------------------------------------------------
 	@RequestMapping(value = "/addUser", method = RequestMethod.GET)
 	// public ModelAndView addUser(@RequestParam int censusId,
-	// @CookieValue("user") String username, @RequestParam String username_add, @RequestParam String dirEmail)
+	// @CookieValue("user") String username, @RequestParam String username_add)
 	// {
-	public ModelAndView addUser(@RequestParam int censusId, String username, @RequestParam String username_add, @RequestParam String dirEmail) {
+	public ModelAndView addUser(@RequestParam int censusId, String username, @RequestParam String username_add) {
 		ModelAndView result = new ModelAndView("census/misVotaciones");
 		username = "admin1";
 		try {
 
-			censusService.addUserToCensus(censusId, username, username_add, dirEmail);
+			censusService.addUserToCensus(censusId, username, username_add);
 			result = new ModelAndView("redirect:/census/edit.do?censusId=" + censusId);
 
 		} catch (Exception oops) {
@@ -197,13 +195,13 @@ public class CensusController extends AbstractController {
 	@RequestMapping(value = "/removeUser", method = RequestMethod.GET)
 	// public ModelAndView removeUser(@RequestParam int censusId,
 	// @CookieValue("user") String username, @RequestParam String
-	// username_remove, @RequestParam String dirEmail) {
+	// username_remove) {
 	public ModelAndView removeUser(@RequestParam int censusId, String username, @RequestParam String username_remove, @RequestParam String dirEmail) {
-		username = "test1";
+		username = "admin1";
 		ModelAndView result = null;
 		try {
 
-			censusService.removeUserToCensu(censusId, username, username_remove, dirEmail);
+			censusService.removeUserToCensu(censusId, username, username_remove);
 			result = new ModelAndView("redirect:/census/edit.do?censusId=" + censusId);
 
 		} catch (Exception oops) {
@@ -235,10 +233,10 @@ public class CensusController extends AbstractController {
 		username = "admin1";
 		ModelAndView result = new ModelAndView("census/manage");
 		//Llamada a todos los usuarios del sistema
-		Map<String,String> usernamesAndEmails = RESTClient.getMapUSernameAndEmailByJsonAutentication();
+		Collection<String> usernames = RESTClient.getListUsernamesByJsonAutentication();
 		Census census = censusService.findOne(censusId);
 		Collection<String> user_list = census.getVoto_por_usuario().keySet();
-		result.addObject("usernames", usernamesAndEmails.keySet());
+		result.addObject("usernames", usernames);
 		result.addObject("census", census);
 		result.addObject("user", user_list);
 		result.addObject("requestURI", "census/edit.do");
